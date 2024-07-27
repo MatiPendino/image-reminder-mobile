@@ -1,60 +1,65 @@
 import { useState } from 'react';
-import { Modal, View, Text, Pressable, StyleSheet, TextInput } from 'react-native';
+import { Modal, View, Text, Pressable, StyleSheet, TextInput, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { WEEKDAYS } from '../constants/Weekdays';
+import * as ImagePicker from 'expo-image-picker'
+import * as MediaLibrary from 'expo-media-library'
+import { useToast } from 'react-native-toast-notifications';
+import AlarmFrequency from './AlarmFrequency';
+import AddPhotoButton from './AddPhotoButton';
+import ImageViewer from './ImageViewer';
 
-export default function CreateAlarm({onModal, isVisible}) {
+const placeholderImage = require('../assets/img/background-image.png')
+
+export default function CreateAlarm({onModal, isVisible, setAlarms, alarms}) {
+    const toast = useToast()
+
     const [title, setTitle] = useState('')
-    const [interval, setInterval] = useState('')
     const [date, setDate] = useState(new Date())
-    const [weekdays, setWeekdays] = useState({
-        isMonday: false,
-        isTuesday: false,
-        isWednesday: false,
-        isThursday: false,
-        isFriday: false,
-        isSaturday: false,
-        isSunday: false
-    })
+    const [currentWeekdays, setCurrentWeekdays] = useState([])
+    const [status, requestPermission] = MediaLibrary.usePermissions()
+    const [selectedImage, setSelectedImage] = useState(null)
 
-    const handleWeekday = (weekday) => {
-        switch (weekday) {
-            case 'Monday':
-                setWeekdays({...weekdays, isMonday: true})
-                break
-            case 'Tuesday':
-                setWeekdays({...weekdays, isTuesday: true})
-                break
-            case 'Wednesday':
-                setWeekdays({...weekdays, isWednesday: true})
-                break
-            case 'Thursday':
-                setWeekdays({...weekdays, isThursday: true})
-                break
-            case 'Friday':
-                setWeekdays({...weekdays, isFriday: true})
-                break
-            case 'Saturday':
-                setWeekdays({...weekdays, isSaturday: true})
-                break
-            case 'Sunday':
-                setWeekdays({...weekdays, isSunday: true})
-                break
-        }
-        console.log(weekdays)
+    if (status === null) {
+        requestPermission()
     }
 
-    const isWeekdayActive = (weekday) => {
-        if (weekdays[weekday] == true) {
-            return true
+    const pickImageAsync = async() => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 1
+        })
+
+        if(!result.canceled) {
+            setSelectedImage(result.assets[0].uri)
+        } else {
+            alert('You did not select any image.')
         }
-        return false
     }
 
-    const onChange = (event, selectedDate) => {
+    const onChange = (e, selectedDate) => {
         const currentDate = selectedDate || date;
         setDate(currentDate);
     };
+
+    const saveAlarm = () => {
+        if (title !== '') {
+            if (currentWeekdays.length > 0) {
+                if (selectedImage !== null) {
+                    const newAlarm = {
+                        title: title,
+                        days: currentWeekdays,
+                        time: date,
+                        image: selectedImage
+                    }
+                    setAlarms([...alarms, newAlarm])
+                    toast.show('Photo alarm set successfully!', {type: 'success'})
+                    onModal(false)
+                } else {
+                    toast.show('You must include an image to continue', {type: 'danger'})
+                }
+            }
+        }
+    }
 
     return (
         <Modal 
@@ -62,76 +67,98 @@ export default function CreateAlarm({onModal, isVisible}) {
             transparent={true} 
             visible={isVisible}
         >
-            <View style={styles.modalContent}>
-                <Text style={styles.title}>Set Alarm</Text>
+            <View style={styles.backgroundContainer}>
+                <View style={styles.modalWrapper}>
+                    <ScrollView style={styles.modalContent}>
+                        <Text style={styles.title}>Set Alarm</Text>
 
-                <DateTimePicker
-                    value={date}
-                    mode='time'
-                    is24Hour={false}
-                    display='spinner'
-                    onChange={onChange}
-                />
-                
-                <TextInput
-                    style={styles.input}
-                    placeholder="Title"
-                    value={title}
-                    onChangeText={setTitle}
-                />
+                        <DateTimePicker
+                            value={date}
+                            mode='time'
+                            is24Hour={false}
+                            display='spinner'
+                            onChange={onChange}
+                        />
+                        
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter alarm title..."
+                            value={title}
+                            onChangeText={setTitle}
+                        />
 
-                <View style={styles.daysContainer}>
-                    {WEEKDAYS.map((weekday, i) => (
+                        <AlarmFrequency
+                            currentWeekdays={currentWeekdays}
+                            setCurrentWeekdays={setCurrentWeekdays}
+                        />
+
+                        <View style={styles.imageContainer}>
+                            <ImageViewer 
+                                placeholderImageSource={placeholderImage} 
+                                selectedImage={selectedImage}
+                            />
+                        </View>
+
+                        <AddPhotoButton
+                            onPress={pickImageAsync}
+                            label="Add Photo"
+                        />
+                        
                         <Pressable
-                            key={i}
-                            onPress={() => handleWeekday(weekday.full)}
-                            style={[
-                                styles.weekdayButton, 
-                                isWeekdayActive() ? styles.weekdayActiveButton : ''
-                            ]}
+                            onPress={() => saveAlarm()}
+                            style={styles.saveButton}
                         >
-                            <Text style={styles.weekdayText}>{weekday.abbreviation}</Text>
+                            <Text style={styles.saveText}>
+                                Save
+                            </Text>
                         </Pressable>
-                    ))}
-                </View>
-                
-                <Pressable
-                    onPress={() => onModal(false)}
-                    style={styles.saveButton}
-                >
-                    <Text style={styles.saveText}>
-                        SAVE
-                    </Text>
-                </Pressable>
+                    </ScrollView>    
+                </View>    
             </View>
         </Modal>
     )
 }
 
 const styles = StyleSheet.create({
+    backgroundContainer: {
+        backgroundColor: 'rgba(0,0,0,0.5)', 
+        height: '100%'
+    },
+    modalWrapper: {
+        marginVertical: 'auto',
+        height: '90%',
+        zIndex: '1'
+    },
     modalContent: {
         backgroundColor: '#fff',
         width: '90%',
+        height: '90%',
         marginHorizontal: 'auto',
-        marginVertical: 'auto'
+        marginVertical: 'auto',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 6
     },
-    daysContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly'
+    title: {
+        fontSize: 20,
+        paddingTop: 10
     },
-    weekdayButton: {
-        paddingVertical: 10
-    },
-    weekdayActiveButton: {
-        backgroundColor: '#000'
-    },
-    weekdayText: {
-        fontSize: 15
+    input: {
+        fontSize: 19,
+        paddingHorizontal: 5,
+        marginVertical: 15,
+        paddingBottom: 3,
+        borderBottomWidth: 1,
+        width: '100%'
     },
     saveButton: {
-        backgroundColor: '#253487',
+        width: 'fit-content',
+        marginStart: 'auto',
+        marginEnd: 10,
+        marginBottom: 15
     },
     saveText: {
-        fontSize: 15
+        fontSize: 20,
+        fontWeight: '500'
     }
 })

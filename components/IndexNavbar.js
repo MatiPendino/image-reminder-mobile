@@ -1,18 +1,18 @@
-import { View, Pressable, StyleSheet } from "react-native"
+import { View, StyleSheet } from "react-native"
+import { Link } from "expo-router"
 import { FontAwesome } from "@expo/vector-icons"
 
-export default function Navbar({onModalVisible}) {
-
+export default function IndexNavbar({}) {
     return (
         <View style={styles.navbarContainer}>
-            <Pressable onPress={() => onModalVisible(true)}>
+            <Link href="/alarm">
                 <FontAwesome
                     name='plus'
                     size={30}
                     color='#fff'
                     style={styles.plusIcon}
                 />
-            </Pressable>
+            </Link>
         </View>
     )
 }
@@ -22,10 +22,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#333',
         width: '100%',
         paddingTop: 30,
+        paddingEnd: 10,
+        paddingBottom: 5,
         alignItems: "flex-end"
     },
-    plusIcon: {
-        paddingEnd: 15,
-        paddingBottom: 5
-    }
 })
