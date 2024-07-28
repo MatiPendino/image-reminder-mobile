@@ -10,10 +10,10 @@ export default function AlarmCard({alarm}) {
         >
             <Text style={[styles.alarmTitle, styles.alarmText]}>{alarm.title}</Text>
             <Text style={[styles.alarmTime, styles.alarmText]}>
-                {alarm.time.getHours()}:{alarm.time.getMinutes()}
+                {alarm.time.slice(0, 5)}
             </Text>
             <View style={styles.alarmDayContainer}>
-                {alarm.days.map((day, i) => (
+                {alarm.weekdays.map((day, i) => (
                     <Text 
                         key={i}
                         style={[styles.alarmText, styles.alarmDayText]}
@@ -68,9 +68,12 @@ const styles = StyleSheet.create({
     },
     alarmDayText: {
         fontSize: 10,
-        borderRadius: '100%',
-        borderColor: '#000',
-        borderWidth: '1'
+        borderRadius: 100,
+        borderColor: '#00000084',
+        textAlign: 'center',
+        width: 16,
+        height: 16,
+        borderWidth: 1
     },
     removeIcon: {
         marginVertical: 'auto'

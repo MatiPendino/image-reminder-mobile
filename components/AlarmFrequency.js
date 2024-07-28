@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         width: 40
     },
     weekdayActiveButton: {
-        borderRadius: '100%',
+        borderRadius: 300,
         borderColor: '#6600a1',
         borderWidth: 1
     },
@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
     },
     weekdayActiveText: {
         color: '#6600a1',
-        fontWeight: 700
+        fontWeight: '700'
     },
 })

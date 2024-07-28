@@ -8,6 +8,7 @@ import AlarmFrequency from '../../components/AlarmFrequency';
 import AddPhotoButton from '../../components/AddPhotoButton';
 import ImageViewer from '../../components/ImageViewer';
 import AlarmNavbar from '../../components/AlarmNavbar';
+import InlineDateTimePicker from '../../components/InlineDatetimePicker';
 
 const placeholderImage = require('../../assets/img/background-image.png')
 
@@ -38,8 +39,9 @@ export default function Alarm({}) {
     }
 
     const onChange = (e, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setDate(currentDate);
+        if (selectedDate) {
+            setDate(selectedDate);
+        }
     };
 
     const saveAlarm = () => {
@@ -72,11 +74,18 @@ export default function Alarm({}) {
             <ScrollView style={styles.container}>
                 <Text style={styles.title}>Set Alarm</Text>
 
-                <DateTimePicker
+                {/*<DateTimePicker
                     value={date}
                     mode='time'
                     is24Hour={false}
                     display='spinner'
+                    onChange={onChange}
+                />*/}
+                <InlineDateTimePicker
+                    value={date}
+                    mode="time"
+                    is24Hour={false}
+                    display="spinner"
                     onChange={onChange}
                 />
                 
@@ -139,20 +148,21 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         paddingBottom: 3,
         borderBottomWidth: 1,
-        width: '100%'
     },
     imageContainer: {
         textAlign: 'center',
         alignItems: 'center'
     },
     saveButton: {
-        width: 'fit-content',
-        marginStart: 'auto',
+        flex: 1,
+        justifyContent: 'flex-end',
+        textAlign: 'right',
         marginEnd: 10,
         marginBottom: 15
     },
     saveText: {
         fontSize: 20,
+        textAlign: 'right',
         fontWeight: '500'
     }
 })

@@ -1,20 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
+import axios from "axios";
+import { getDeviceId } from "../utils/getDeviceId";
 import IndexNavbar from '../components/IndexNavbar';
 import AlarmCard from '../components/AlarmCard';
-import CreateAlarm from '../components/CreateAlarm';
 
 export default function App() {
   const [alarms, setAlarms] = useState([
     {
       title: 'Motivation',
-      days: [{abbreviation: 'M', full: 'Monday'}, {abbreviation: 'S', full: 'Saturday'}],
-      time: new Date(2024, 6, 27, 11, 50),
+      weekdays: [{abbreviation: 'M', full: 'Monday'}, {abbreviation: 'S', full: 'Saturday'}],
+      time: "10:36:00",
       image: require('../assets/img/background-image.png')
     }
   ])
+  // Get the unique device ID
+  useEffect(() => {
+    const getAlarms = async () => {
+      try {
+        const id = await getDeviceId();
+          const response = await axios.get('http://192.168.20.51:8000/alarms/', {
+            headers: {
+              'Device-ID': id
+            }
+          })
+          const data = response.data
+          console.log(data)
+          console.log(data.length)
+          setAlarms([...alarms, ...data])
+          console.log([...alarms, ...data])
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    getAlarms()
+  }, [])
   return (
     <ToastProvider>
       <View style={styles.container}>
@@ -29,12 +52,6 @@ export default function App() {
             />
           )}
         />
-        {/*<CreateAlarm
-          isVisible={isModalVisible}
-          onModal={setIsModalVisible}
-          alarms={alarms}
-          setAlarms={setAlarms}
-        />*/}
       </View>  
     </ToastProvider>
   );

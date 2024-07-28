@@ -10,7 +10,6 @@ export default function AlarmNavbar({}) {
                     name='arrow-left'
                     size={30}
                     color='#fff'
-                    style={styles.arrowIcon}
                 />
             </Link>
         </View>
@@ -21,9 +20,8 @@ const styles = StyleSheet.create({
     navbarContainer: {
         backgroundColor: '#333',
         width: '100%',
-        paddingTop: 30,
+        paddingTop: 40,
         paddingStart: 5,
         paddingBottom: 5,
-        alignItems: "flex-start"
     },
 })

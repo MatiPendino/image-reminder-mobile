@@ -10,7 +10,6 @@ export default function IndexNavbar({}) {
                     name='plus'
                     size={30}
                     color='#fff'
-                    style={styles.plusIcon}
                 />
             </Link>
         </View>
@@ -21,7 +20,7 @@ const styles = StyleSheet.create({
     navbarContainer: {
         backgroundColor: '#333',
         width: '100%',
-        paddingTop: 30,
+        paddingTop: 40,
         paddingEnd: 10,
         paddingBottom: 5,
         alignItems: "flex-end"
