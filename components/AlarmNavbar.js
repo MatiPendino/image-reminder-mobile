@@ -1,17 +1,22 @@
-import { View, StyleSheet } from "react-native"
-import { Link } from "expo-router"
+import { View, StyleSheet, Pressable } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
+import { useNavigation } from 'expo-router';
+
 
 export default function AlarmNavbar({}) {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.navbarContainer}>
-            <Link href="/">
+            <Pressable 
+                onPress={() => navigation.navigate('index')}
+            >
                 <FontAwesome
                     name='arrow-left'
                     size={30}
                     color='#fff'
                 />
-            </Link>
+            </Pressable>
         </View>
     )
 }

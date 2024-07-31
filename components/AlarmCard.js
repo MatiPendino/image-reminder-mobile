@@ -1,11 +1,16 @@
 import { Pressable, View, Text, StyleSheet } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { useNavigation } from 'expo-router';
+
 
 export default function AlarmCard({alarm}) {
-    console.log(alarm.time)
+    const navigation = useNavigation();
+
     return (
         <Pressable 
-            onPress={() => alert('Clicked')}
+            onPress={() => navigation.navigate('alarm', {
+                alarm: alarm
+            })}
             style={styles.alarmContainer}
         >
             <Text style={[styles.alarmTitle, styles.alarmText]}>{alarm.title}</Text>

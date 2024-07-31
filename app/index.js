@@ -1,36 +1,32 @@
 import { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
 import axios from "axios";
 import { getDeviceId } from "../utils/getDeviceId";
 import IndexNavbar from '../components/IndexNavbar';
 import AlarmCard from '../components/AlarmCard';
 
-export default function App() {
+export default function Home({}) {
   const [alarms, setAlarms] = useState([
-    {
+    /*{
       title: 'Motivation',
       weekdays: [{abbreviation: 'M', full: 'Monday'}, {abbreviation: 'S', full: 'Saturday'}],
       time: "10:36:00",
       image: require('../assets/img/background-image.png')
-    }
+    }*/
   ])
   // Get the unique device ID
   useEffect(() => {
     const getAlarms = async () => {
       try {
         const id = await getDeviceId();
-          const response = await axios.get('http://192.168.20.51:8000/alarms/', {
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/alarms/`, {
             headers: {
               'Device-ID': id
             }
           })
           const data = response.data
-          console.log(data)
-          console.log(data.length)
           setAlarms([...alarms, ...data])
-          console.log([...alarms, ...data])
       } catch (err) {
         console.log(err)
       }
