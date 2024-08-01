@@ -1,10 +1,30 @@
 import { Pressable, View, Text, StyleSheet } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from 'expo-router';
-
+import { getDeviceId } from "../utils/getDeviceId";
+import { useToast } from "react-native-toast-notifications";
+import axios from "axios";
+import {BACKEND_URL} from '@env'
 
 export default function AlarmCard({alarm}) {
     const navigation = useNavigation();
+    const toast = useToast()
+    console.log(alarm)
+
+    const deleteAlarm = async () => {
+        try {
+            const id = await getDeviceId();
+            const response = await axios.delete(`${BACKEND_URL}/alarms/${alarm.id}/`, {
+                headers: {
+                    'Device-ID': id,
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            toast.show('There was an error deleting this alarm', {type: 'danger'})
+        }
+        
+    }
 
     return (
         <Pressable 
@@ -28,7 +48,7 @@ export default function AlarmCard({alarm}) {
                 ))}
             </View>
             <Pressable
-                onPress={() => alert('Remove')}
+                onPress={() => deleteAlarm()}
             >
                 <MaterialCommunityIcons
                     name='clock-remove'

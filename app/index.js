@@ -5,6 +5,7 @@ import axios from "axios";
 import { getDeviceId } from "../utils/getDeviceId";
 import IndexNavbar from '../components/IndexNavbar';
 import AlarmCard from '../components/AlarmCard';
+import {BACKEND_URL} from '@env'
 
 export default function Home({}) {
   const [alarms, setAlarms] = useState([
@@ -20,13 +21,13 @@ export default function Home({}) {
     const getAlarms = async () => {
       try {
         const id = await getDeviceId();
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/alarms/`, {
-            headers: {
-              'Device-ID': id
-            }
-          })
-          const data = response.data
-          setAlarms([...alarms, ...data])
+        const response = await axios.get(`${BACKEND_URL}/alarms/`, {
+          headers: {
+            'Device-ID': id
+          }
+        })
+        const data = response.data
+        setAlarms([...alarms, ...data])
       } catch (err) {
         console.log(err)
       }

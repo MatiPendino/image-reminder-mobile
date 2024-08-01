@@ -7,7 +7,6 @@ export const getDeviceId = async () => {
   try {
     // Check if a UUID is already stored
     let deviceId = await AsyncStorage.getItem(DEVICE_ID_KEY);
-    console.log(deviceId)
     if (!deviceId) {
       // If not, generate a new UUID
       deviceId = uuid.v4();
