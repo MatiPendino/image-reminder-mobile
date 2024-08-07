@@ -10,7 +10,7 @@ import { formatDate } from '../utils/formatDatehhmm';
 export default function SaveAlarm({title, currentWeekdays, date, selectedImage, alarm}) {
     const toast = useToast()
 
-    const saveAlarm = () => {
+    const saveAlarm = async () => {
         const newAlarm = {
             title: title,
             weekdays: currentWeekdays,
@@ -66,9 +66,13 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
             if (currentWeekdays.length > 0) {
                 if (selectedImage !== null) {
                     try {
-                        const response = postAlarm()
-                        toast.show('Photo alarm set successfully!', {type: 'success'})
-                        router.push('/')
+                        const response = await postAlarm()
+                        if (response.status === 201 || response.status === 200) {
+                            toast.show('Photo alarm set successfully!', {type: 'success'})
+                            router.push('/')   
+                        } else {
+                            toast.show('There was an error processing the alarm', {type: 'danger'})
+                        }
                     } catch(err) {
                         toast.show(str(err), {type: 'danger'})
                     }                    

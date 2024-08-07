@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "image-reminder-mobile",
-    "slug": "image-reminder-mobile",
+    "slug": "photo-reminder",
     "scheme": "image-reminder",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,13 +19,24 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.example.imagereminder",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "db0e8d38-cec2-4790-9c4d-cbaa9611efb6"
+      }
+    },
+    "owner": "matipendino"
   }
 }

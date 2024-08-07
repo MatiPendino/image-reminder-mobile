@@ -5,7 +5,7 @@ export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}) {
     const handleWeekday = (day) => {
         for (let i = 0; i < currentWeekdays.length; i++) {
             if (currentWeekdays[i].full === day.full) {
-                setCurrentWeekdays(currentWeekdays.filter((weekday) => weekday !== day))
+                setCurrentWeekdays(currentWeekdays.filter((weekday) => (weekday.full !== day.full || weekday.abbreviation !== day.abbreviation)))
                 return
             } 
         }

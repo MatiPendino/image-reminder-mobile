@@ -6,10 +6,9 @@ import { useToast } from "react-native-toast-notifications";
 import axios from "axios";
 import {BACKEND_URL} from '@env'
 
-export default function AlarmCard({alarm}) {
+export default function AlarmCard({alarm, setDataUpdated}) {
     const navigation = useNavigation();
     const toast = useToast()
-    console.log(alarm)
 
     const deleteAlarm = async () => {
         try {
@@ -19,6 +18,9 @@ export default function AlarmCard({alarm}) {
                     'Device-ID': id,
                 }
             })
+            if (response.status === 204) {
+                setDataUpdated(true)
+            }
         } catch (err) {
             console.log(err)
             toast.show('There was an error deleting this alarm', {type: 'danger'})
@@ -89,7 +91,9 @@ const styles = StyleSheet.create({
     },
     alarmDayContainer: {
         width: '20%',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginVertical: 'auto',
     },
     alarmDayText: {
         fontSize: 10,
@@ -98,7 +102,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: 16,
         height: 16,
-        borderWidth: 1
+        borderWidth: 1,
+        marginVertical: 1
     },
     removeIcon: {
         marginVertical: 'auto'
