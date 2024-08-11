@@ -5,6 +5,7 @@ import { getDeviceId } from "../utils/getDeviceId";
 import { useToast } from "react-native-toast-notifications";
 import axios from "axios";
 import {BACKEND_URL} from '@env'
+import { getLocalTimeStr } from "../utils/getLocalTimeStr";
 
 export default function AlarmCard({alarm, setDataUpdated}) {
     const navigation = useNavigation();
@@ -37,7 +38,7 @@ export default function AlarmCard({alarm, setDataUpdated}) {
         >
             <Text style={[styles.alarmTitle, styles.alarmText]}>{alarm.title}</Text>
             <Text style={[styles.alarmTime, styles.alarmText]}>
-                {alarm.time.slice(0, 5)}
+                {getLocalTimeStr(alarm.time)}
             </Text>
             <View style={styles.alarmDayContainer}>
                 {alarm.weekdays.map((day, i) => (

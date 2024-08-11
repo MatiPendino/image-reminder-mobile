@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, FlatList, Platform, Pressable, Text } from 'react-native';
+import { StyleSheet, View, FlatList, Platform } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
 import * as Notifications from 'expo-notifications';
+import { useToast } from "react-native-toast-notifications";
 import axios from "axios";
 import { getDeviceId } from "../utils/getDeviceId";
 import IndexNavbar from '../components/IndexNavbar';
 import AlarmCard from '../components/AlarmCard';
+import PhotoRemind from '../components/PhotoRemind';
 import {BACKEND_URL} from '@env'
 
 Notifications.setNotificationHandler({
@@ -46,12 +48,12 @@ async function registerForPushNotificationsAsync() {
   }
 
   if (token) {
-    console.log(token)
     return token; 
   }
 }
 
 export default function Home({}) {
+  const toast = useToast()
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -63,6 +65,7 @@ export default function Home({}) {
       image: require('../assets/img/background-image.png')
     }*/
   ])
+  const [notificationAlarm, setNotificationAlarm] = useState(null)
   const [dataUpdated, setDataUpdated] = useState(false)
   useEffect(() => {
     const getAlarms = async () => {
@@ -84,12 +87,6 @@ export default function Home({}) {
 
     getAlarms()
   }, [dataUpdated])
-
-  const sendPushNots = async () => {
-    axios.post(
-      `${BACKEND_URL}/alarms/sent_nots/`, 
-    );
-  }
 
   useEffect(() => {
     const postToken = async () => {
@@ -114,11 +111,34 @@ export default function Home({}) {
     postToken()
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      // Handle notification received
+      //
     });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      // Handle notification response
+    const getNotificationAlarm = async (alarmId) => {
+      try {
+        const id = await getDeviceId();
+        const response = await axios.get(`${BACKEND_URL}/alarms/${alarmId}/`, {
+          headers: {
+            'Device-ID': id
+          }
+        })
+        const data = response.data
+        return data
+      } catch (err) {
+        console.log(err)
+        throw new Error(err)
+      } 
+    }
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
+      const { alarm_id } = response.notification.request.content.data;
+      try {
+        const alarm = await getNotificationAlarm(alarm_id)
+        setNotificationAlarm(alarm) 
+      } catch (err) {
+        console.log(err)
+        toast.show(err, {type: 'danger'})
+      }
     });
 
     return () => {
@@ -129,23 +149,26 @@ export default function Home({}) {
 
   return (
     <ToastProvider>
-      <View style={styles.container}>
-        <IndexNavbar />
-        <FlatList
-          data={alarms}
-          contentContainerStyle={styles.listContainer}
-          renderItem={({item, index}) => (
-            <AlarmCard 
-              key={index}
-              alarm={item}
-              setDataUpdated={setDataUpdated}
-            />
-          )}
-        />
-        <Pressable onPress={() => sendPushNots()}>
-          <Text>Testing nots</Text>
-        </Pressable>
-      </View>  
+      {
+        notificationAlarm
+        ?
+        <PhotoRemind notificationAlarm={notificationAlarm} setNotificationAlarm={setNotificationAlarm} />
+        :
+        <View style={styles.container}>
+          <IndexNavbar />
+          <FlatList
+            data={alarms}
+            contentContainerStyle={styles.listContainer}
+            renderItem={({item, index}) => (
+              <AlarmCard 
+                key={index}
+                alarm={item}
+                setDataUpdated={setDataUpdated}
+              />
+            )}
+          />
+        </View>  
+      }
     </ToastProvider>
   );
 }

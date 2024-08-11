@@ -9,7 +9,7 @@ export default function AlarmNavbar({}) {
     return (
         <View style={styles.navbarContainer}>
             <Pressable 
-                onPress={() => navigation.navigate('index')}
+                onPress={() => navigation.goBack()}
             >
                 <FontAwesome
                     name='arrow-left'
