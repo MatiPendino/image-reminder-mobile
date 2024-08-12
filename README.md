@@ -1,50 +1,40 @@
-# Welcome to your Expo app 👋
+<h1 align="center">Image Reminder Backend</h1>
+<p align="center">
+  <a href="https://github.com/MatiPendino/image-reminder-backend/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/GPL3.0-blue?label=license&labelColor=%2344ff33&color=%23fff" alt="license">
+  </a>
+</p>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Backend Code**: [github.com/MatiPendino/image-reminder-backend](https://github.com/MatiPendino/image-reminder-backend)
 
-## Get started
+**Source Code**: [github.com/MatiPendino/image-reminder-mobile](https://github.com/MatiPendino/image-reminder-mobile)  
 
-1. Install dependencies
+---
+
+ImageReminder is a project designed to create image-based reminders (alarms), ensuring users never forget to check an important photo. The backend is built with Django/DRF, while the mobile app is developed using React Native/Expo.
+
+## Install
+
+1. Clone repo
+   ```
+   git clone https://github.com/MatiPendino/image-reminder-mobile.git
+   ```
+
+2. Create .env file
+   ```
+   BACKEND_URL='http://127.0.0.1:8000'
+   ```
+
+3. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
+4. Start the app ([make sure the backend is running](https://github.com/MatiPendino/image-reminder-backend))
 
    ```bash
     npx expo start
    ```
 
-In the output, you'll find options to open the app in a
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
