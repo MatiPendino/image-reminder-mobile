@@ -71,7 +71,7 @@ export default function Home({}) {
     const getAlarms = async () => {
       try {
         const id = await getDeviceId();
-        const response = await axios.get(`${BACKEND_URL}/alarms/`, {
+        const response = await axios.get(`${BACKEND_URL}/alarms/alarm/`, {
           headers: {
             'Device-ID': id
           }
@@ -117,7 +117,7 @@ export default function Home({}) {
     const getNotificationAlarm = async (alarmId) => {
       try {
         const id = await getDeviceId();
-        const response = await axios.get(`${BACKEND_URL}/alarms/${alarmId}/`, {
+        const response = await axios.get(`${BACKEND_URL}/alarms/alarm/${alarmId}/`, {
           headers: {
             'Device-ID': id
           }

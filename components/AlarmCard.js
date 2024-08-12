@@ -14,7 +14,7 @@ export default function AlarmCard({alarm, setDataUpdated}) {
     const deleteAlarm = async () => {
         try {
             const id = await getDeviceId();
-            const response = await axios.delete(`${BACKEND_URL}/alarms/${alarm.id}/`, {
+            const response = await axios.delete(`${BACKEND_URL}/alarms/alarm/${alarm.id}/`, {
                 headers: {
                     'Device-ID': id,
                 }

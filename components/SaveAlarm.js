@@ -35,7 +35,7 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                 let response = ''
                 if (!alarm) {
                     response = await axios.post(
-                        `${BACKEND_URL}/alarms/`, 
+                        `${BACKEND_URL}/alarms/alarm/`, 
                         formData, 
                         {
                             headers: {
@@ -46,7 +46,7 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                     )
                 } else {
                     response = await axios.put(
-                        `${BACKEND_URL}/alarms/${alarm.id}/`, 
+                        `${BACKEND_URL}/alarms/alarm/${alarm.id}/`, 
                         formData, 
                         {
                             headers: {
