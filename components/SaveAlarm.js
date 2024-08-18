@@ -44,6 +44,7 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                             }
                         }
                     )
+                    console.log(response)
                 } else {
                     response = await axios.put(
                         `${BACKEND_URL}/alarms/alarm/${alarm.id}/`, 

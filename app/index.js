@@ -76,6 +76,7 @@ export default function Home({}) {
             'Device-ID': id
           }
         })
+        console.log(response)
         const data = response.data
         setAlarms([...data])
       } catch (err) {
