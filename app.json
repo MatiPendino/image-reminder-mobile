@@ -20,7 +20,7 @@
         "foregroundImage": "./assets/img/adaptive-icon.png",
         "backgroundColor": "#cfedf7"
       },
-      "package": "com.example.imagereminder",
+      "package": "com.matipendino2001.imagereminder",
       "versionCode": 1
     },
     "web": {
@@ -34,9 +34,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "db0e8d38-cec2-4790-9c4d-cbaa9611efb6"
+        "projectId": "4025cfaa-d740-4600-af2a-6fe40f79fc67"
       }
     },
-    "owner": "matipendino"
+    "owner": "matipendino2001"
   }
 }
