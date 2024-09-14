@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Platform, Button, Modal, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Platform, Button, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const InlineDateTimePicker = ({ value, mode, is24Hour, display, onChange }) => {
@@ -37,16 +37,14 @@ const InlineDateTimePicker = ({ value, mode, is24Hour, display, onChange }) => {
             <View>
                 <Button title="Show Time Picker" onPress={showPicker} />
                 {show && (
-                    <Modal transparent={true} animationType="slide" visible={show} onRequestClose={hidePicker}>
-                        <DateTimePicker
-                            value={value}
-                            mode={mode}
-                            is24Hour={is24Hour}
-                            display={display}
-                            onChange={handleChange}
-                            style={styles.picker}
-                        />
-                    </Modal>
+                      <DateTimePicker
+                        value={value}
+                        mode={mode}
+                        is24Hour={is24Hour}
+                        display={display}
+                        onChange={handleChange}
+                        style={styles.picker}
+                      />
                 )}
             </View>
         }

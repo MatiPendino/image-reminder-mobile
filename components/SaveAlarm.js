@@ -3,9 +3,8 @@ import { useToast } from 'react-native-toast-notifications';
 import {router} from 'expo-router'
 import axios from "axios";
 import { getDeviceId } from '../utils/getDeviceId'
-import {BACKEND_URL} from '@env'
 import { formatDate } from '../utils/formatDatehhmm';
-
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 export default function SaveAlarm({title, currentWeekdays, date, selectedImage, alarm}) {
     const toast = useToast()

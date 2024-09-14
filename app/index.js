@@ -8,7 +8,7 @@ import { getDeviceId } from "../utils/getDeviceId";
 import IndexNavbar from '../components/IndexNavbar';
 import AlarmCard from '../components/AlarmCard';
 import PhotoRemind from '../components/PhotoRemind';
-import {BACKEND_URL} from '@env'
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,38 +18,65 @@ Notifications.setNotificationHandler({
   }),
 });
 
+
 async function registerForPushNotificationsAsync() {
   let token;
+
+  // Check platform and request permissions
   if (Platform.OS === 'android' || Platform.OS === 'ios') {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus.status;
-    if (existingStatus.status !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+    if (Platform.OS === 'android') {
+      // Request POST_NOTIFICATIONS permission for Android 13+
+      if (Platform.Version >= 33) { 
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+        if (result !== PermissionsAndroid.RESULTS.GRANTED) {
+          Alert.alert('Permission denied', 'Failed to get push token for push notification!');
+          return;
+        }
+      }
+
+      // Set notification channel for Android
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
     }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
+
+    // Request notification permissions for iOS
+    if (Platform.OS === 'ios') {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== 'granted') {
+        Alert.alert('Permission denied', 'Failed to get push token for push notification!');
+        return;
+      }
     }
-    token = (await Notifications.getExpoPushTokenAsync({
-      projectId: "db0e8d38-cec2-4790-9c4d-cbaa9611efb6",
-    })).data
+
+    // Fetch the push token for both platforms
+    try {
+      const response = await Notifications.getExpoPushTokenAsync({
+        projectId: "4025cfaa-d740-4600-af2a-6fe40f79fc67",
+      });
+      token = response.data;
+      console.log("Push token obtained:", token);
+    } catch (error) {
+      console.error("Failed to get push token:", error);
+    }
+
   } else {
-    alert('Must use physical device for Push Notifications');
+    Alert.alert('Unsupported Device', 'Must use physical device for Push Notifications');
   }
 
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  if (token) {
-    return token; 
-  }
+  return token;
 }
 
 export default function Home({}) {
@@ -76,11 +103,10 @@ export default function Home({}) {
             'Device-ID': id
           }
         })
-        console.log(response)
         const data = response.data
         setAlarms([...data])
       } catch (err) {
-        console.log(err)
+        console.log("error:", err)
       } finally {
         setDataUpdated(false)
       }
@@ -110,36 +136,28 @@ export default function Home({}) {
       }
     }
     postToken()
+  }, []);
 
+  useEffect(() => {
+    const checkInitialNotification = async () => {
+      const response = await Notifications.getLastNotificationResponseAsync();
+      if (response) {
+        console.log("Initial notification response:", response);
+        const { alarm_id } = response.notification.request.content.data;
+        handleNotificationResponse(alarm_id);
+      }
+    };
+
+    checkInitialNotification();
+    
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      //
+      console.log("Notification received:", notification);
     });
 
-    const getNotificationAlarm = async (alarmId) => {
-      try {
-        const id = await getDeviceId();
-        const response = await axios.get(`${BACKEND_URL}/alarms/alarm/${alarmId}/`, {
-          headers: {
-            'Device-ID': id
-          }
-        })
-        const data = response.data
-        return data
-      } catch (err) {
-        console.log(err)
-        throw new Error(err)
-      } 
-    }
-
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
+      console.log("Notification response received:", response);
       const { alarm_id } = response.notification.request.content.data;
-      try {
-        const alarm = await getNotificationAlarm(alarm_id)
-        setNotificationAlarm(alarm) 
-      } catch (err) {
-        console.log(err)
-        toast.show(err, {type: 'danger'})
-      }
+      handleNotificationResponse(alarm_id);
     });
 
     return () => {
@@ -147,6 +165,32 @@ export default function Home({}) {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
+  const handleNotificationResponse = async (alarmId) => {
+    try {
+      const alarm = await getNotificationAlarm(alarmId);
+      setNotificationAlarm(alarm); 
+    } catch (err) {
+      console.log("error:", err);
+      toast.show(err.message, { type: 'danger' });
+    }
+  };
+
+  const getNotificationAlarm = async (alarmId) => {
+    try {
+      const id = await getDeviceId();
+      const response = await axios.get(`${BACKEND_URL}/alarms/alarm/${alarmId}/`, {
+        headers: {
+          'Device-ID': id
+        }
+      })
+      const data = response.data
+      return data
+    } catch (err) {
+      console.log("error", err)
+      throw new Error(err)
+    } 
+  }
 
   return (
     <ToastProvider>

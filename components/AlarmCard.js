@@ -4,14 +4,14 @@ import { useNavigation } from 'expo-router';
 import { getDeviceId } from "../utils/getDeviceId";
 import { useToast } from "react-native-toast-notifications";
 import axios from "axios";
-import {BACKEND_URL} from '@env'
 import { getLocalTimeStr } from "../utils/getLocalTimeStr";
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 export default function AlarmCard({alarm, setDataUpdated}) {
     const navigation = useNavigation();
     const toast = useToast()
 
-    const deleteAlarm = async () => {
+    const deleteAlarm = async () => {s
         try {
             const id = await getDeviceId();
             const response = await axios.delete(`${BACKEND_URL}/alarms/alarm/${alarm.id}/`, {
