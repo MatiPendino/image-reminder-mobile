@@ -22,7 +22,7 @@ ImageReminder is a project designed to create image-based reminders (alarms), en
 
 2. Create .env file
    ```
-   BACKEND_URL='http://127.0.0.1:8000'
+   EXPO_PUBLIC_BACKEND_URL='http://127.0.0.1:8000'
    ```
 
 3. Install dependencies
