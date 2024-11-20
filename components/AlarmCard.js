@@ -3,9 +3,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from 'expo-router';
 import { getDeviceId } from "../utils/getDeviceId";
 import { useToast } from "react-native-toast-notifications";
-import axios from "axios";
+import api from '../services/api'
 import { getLocalTimeStr } from "../utils/getLocalTimeStr";
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 export default function AlarmCard({alarm, setDataUpdated}) {
     const navigation = useNavigation();
@@ -14,7 +13,7 @@ export default function AlarmCard({alarm, setDataUpdated}) {
     const deleteAlarm = async () => {s
         try {
             const id = await getDeviceId();
-            const response = await axios.delete(`${BACKEND_URL}/alarms/alarm/${alarm.id}/`, {
+            const response = await api.delete(`/alarms/alarm/${alarm.id}/`, {
                 headers: {
                     'Device-ID': id,
                 }

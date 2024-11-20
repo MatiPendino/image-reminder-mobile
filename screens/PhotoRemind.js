@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from 'react-native';
 import ImageViewer from '../components/ImageViewer';
-import PhotoRemindNavbar from './PhotoRemindNavbar';
+import PhotoRemindNavbar from '../components/PhotoRemindNavbar'
 import { getLocalTimeStr } from '../utils/getLocalTimeStr';
 
 const placeholderImage = require('../assets/img/background-image.png')

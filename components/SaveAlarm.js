@@ -1,10 +1,9 @@
 import { StyleSheet, Pressable, Text } from "react-native"
 import { useToast } from 'react-native-toast-notifications';
 import {router} from 'expo-router'
-import axios from "axios";
+import api from '../services/api'
 import { getDeviceId } from '../utils/getDeviceId'
 import { formatDate } from '../utils/formatDatehhmm';
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 export default function SaveAlarm({title, currentWeekdays, date, selectedImage, alarm}) {
     const toast = useToast()
@@ -33,8 +32,7 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                 // If no alarm is retrieved from the params, create a new one
                 let response = ''
                 if (!alarm) {
-                    response = await axios.post(
-                        `${BACKEND_URL}/alarms/alarm/`, 
+                    response = await api.post('/alarms/alarm/', 
                         formData, 
                         {
                             headers: {
@@ -45,8 +43,7 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                     )
                     console.log(response)
                 } else {
-                    response = await axios.put(
-                        `${BACKEND_URL}/alarms/alarm/${alarm.id}/`, 
+                    response = await api.put(`/alarms/alarm/${alarm.id}/`, 
                         formData, 
                         {
                             headers: {
