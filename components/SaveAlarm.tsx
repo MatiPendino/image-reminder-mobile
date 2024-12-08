@@ -4,11 +4,22 @@ import {router} from 'expo-router'
 import api from '../services/api'
 import { getDeviceId } from '../utils/getDeviceId'
 import { formatDate } from '../utils/formatDatehhmm';
+import { AlarmProps, Weekday } from "../types";
 
-export default function SaveAlarm({title, currentWeekdays, date, selectedImage, alarm}) {
+interface SaveAlarmProps {
+    title: string
+    currentWeekdays: Weekday[]
+    date: Date
+    selectedImage: string
+    alarm: AlarmProps
+}
+
+export default function SaveAlarm({
+    title, currentWeekdays, date, selectedImage, alarm
+}: SaveAlarmProps) {
     const toast = useToast()
 
-    const saveAlarm = async () => {
+    const saveAlarm = async (): Promise<void> => {
         const newAlarm = {
             title: title,
             weekdays: currentWeekdays,
@@ -17,22 +28,22 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
         }
         const postAlarm = async () => {
             try {
-                const id = await getDeviceId();
-                const formData = new FormData();
-                formData.append('title', newAlarm.title);
-                formData.append('weekdays', JSON.stringify(newAlarm.weekdays));
-                formData.append('time', newAlarm.time);
+                const id: string = await getDeviceId()
+                const formData = new FormData()
+                formData.append('title', newAlarm.title)
+                formData.append('weekdays', JSON.stringify(newAlarm.weekdays))
+                formData.append('time', newAlarm.time)
                 const imageFile = {
                     uri: selectedImage,
                     name: selectedImage.split('/').pop(),
                     type: 'image/jpeg', 
-                };
-                formData.append('image', imageFile);
+                }
+                // @ts-ignore
+                formData.append('image', imageFile)
 
                 // If no alarm is retrieved from the params, create a new one
-                let response = ''
                 if (!alarm) {
-                    response = await api.post('/alarms/alarm/', 
+                    const response = await api.post('/alarms/alarm/', 
                         formData, 
                         {
                             headers: {
@@ -42,8 +53,9 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                         }
                     )
                     console.log(response)
+                    return response
                 } else {
-                    response = await api.put(`/alarms/alarm/${alarm.id}/`, 
+                    const response = await api.put(`/alarms/alarm/${alarm.id}/`, 
                         formData, 
                         {
                             headers: {
@@ -51,10 +63,10 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                                 'Content-Type': 'multipart/form-data'
                             }
                         }
-                    )
+                    ) 
+                    return response
                 }
                 
-                return response
             } catch (err) {
                 throw new Error(err)
             }
@@ -71,7 +83,7 @@ export default function SaveAlarm({title, currentWeekdays, date, selectedImage, 
                             toast.show('There was an error processing the alarm', {type: 'danger'})
                         }
                     } catch(err) {
-                        toast.show(str(err), {type: 'danger'})
+                        toast.show(err.toString(), {type: 'danger'})
                     }                    
                 } else {
                     toast.show('You must include an image to continue', {type: 'danger'})

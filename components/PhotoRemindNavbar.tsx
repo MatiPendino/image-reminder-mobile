@@ -1,7 +1,12 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { AlarmProps } from '../types';
 
-export default function PhotoRemindNavbar({setNotificationAlarm}) {
+interface PhotoRemindNavbarProps {
+    setNotificationAlarm: React.Dispatch<React.SetStateAction<AlarmProps>>
+}
+
+export default function PhotoRemindNavbar({setNotificationAlarm}: PhotoRemindNavbarProps) {
 
     return (
         <View style={styles.navbarContainer}>

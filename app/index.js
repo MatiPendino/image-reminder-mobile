@@ -24,7 +24,7 @@ export default function Index({}) {
   }, []);
 
   useEffect(() => {
-    checkInitialNotification();
+    checkInitialNotification(setNotificationAlarm);
     
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log("Notification received:", notification);
@@ -33,7 +33,7 @@ export default function Index({}) {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
       console.log("Notification response received:", response);
       const { alarm_id } = response.notification.request.content.data;
-      handleNotificationResponse(alarm_id);
+      handleNotificationResponse(alarm_id, setNotificationAlarm);
     });
 
     return () => {

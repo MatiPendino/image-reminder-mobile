@@ -1,9 +1,15 @@
 import { View, StyleSheet, Pressable } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
+import { ParamListBase, NavigationProp } from "@react-navigation/native";
 import { useNavigation } from 'expo-router';
+import { AlarmProps } from "../types";
+
+interface RootStackParamList extends ParamListBase {
+    alarm: AlarmProps
+}
 
 export default function IndexNavbar({}) {
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     return (
         <View style={styles.navbarContainer}>

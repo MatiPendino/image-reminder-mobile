@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import { View, Platform, Button, StyleSheet } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
-const InlineDateTimePicker = ({ value, mode, is24Hour, display, onChange }) => {
-  const [show, setShow] = useState(false);
+interface Props {
+  mode: 'date' | 'time' | 'datetime' | 'countdown'
+  is24Hour: boolean
+  display: 'spinner' | 'default' | 'clock' | 'calendar'
+  value: Date
+  onChange: (event: DateTimePickerEvent, selectedDate: Date) => void
+}
 
-  const showPicker = () => {
+const InlineDateTimePicker = ({value, mode, is24Hour, display, onChange}: Props) => {
+  const [show, setShow] = useState<boolean>(false);
+
+  const showPicker = (): void => {
     setShow(true);
   };
 
-  const hidePicker = () => {
+  const hidePicker = (): void => {
     setShow(false);
   };
 
-  const handleChange = (event, selectedDate) => {
+  const handleChange = (event: DateTimePickerEvent, selectedDate: Date) => {
     if (event.type === 'set') {
       // User clicked 'OK'
       onChange(event, selectedDate);

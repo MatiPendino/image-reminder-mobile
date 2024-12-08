@@ -1,3 +1,4 @@
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { Pressable, View, Text, StyleSheet } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from 'expo-router';
@@ -5,12 +6,22 @@ import { getDeviceId } from "../utils/getDeviceId";
 import { useToast } from "react-native-toast-notifications";
 import api from '../services/api'
 import { getLocalTimeStr } from "../utils/getLocalTimeStr";
+import { AlarmProps } from "../types";
 
-export default function AlarmCard({alarm, setDataUpdated}) {
-    const navigation = useNavigation();
+interface AlarmCardProps {
+    alarm: AlarmProps
+    setIsDataUpdated: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+interface RootStackParamList extends ParamListBase {
+    alarm: {alarm: AlarmProps}
+}
+
+export default function AlarmCard({alarm, setIsDataUpdated}: AlarmCardProps) {
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const toast = useToast()
 
-    const deleteAlarm = async () => {s
+    const deleteAlarm = async (): Promise<void> => {
         try {
             const id = await getDeviceId();
             const response = await api.delete(`/alarms/alarm/${alarm.id}/`, {
@@ -19,7 +30,7 @@ export default function AlarmCard({alarm, setDataUpdated}) {
                 }
             })
             if (response.status === 204) {
-                setDataUpdated(true)
+                setIsDataUpdated(true)
             }
         } catch (err) {
             console.log(err)

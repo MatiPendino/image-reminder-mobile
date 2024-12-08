@@ -1,5 +1,6 @@
+import { Weekday } from "../types";
 
-export const WEEKDAYS = [
+export const WEEKDAYS: Weekday[] = [
     {
         abbreviation: 'M',
         full: 'Monday'

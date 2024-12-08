@@ -2,10 +2,17 @@ import { StyleSheet, View, Text } from 'react-native';
 import ImageViewer from '../components/ImageViewer';
 import PhotoRemindNavbar from '../components/PhotoRemindNavbar'
 import { getLocalTimeStr } from '../utils/getLocalTimeStr';
+import { AlarmProps } from '../types';
 
 const placeholderImage = require('../assets/img/background-image.png')
 
-export default function PhotoRemind({notificationAlarm, setNotificationAlarm}) {
+interface PhotoRemindProps {
+    notificationAlarm: AlarmProps
+    setNotificationAlarm: React.Dispatch<React.SetStateAction<AlarmProps>>
+}
+
+export default function PhotoRemind({notificationAlarm, setNotificationAlarm}: PhotoRemindProps) {
+
     return (
         <>
             <PhotoRemindNavbar setNotificationAlarm={setNotificationAlarm} />
@@ -13,8 +20,8 @@ export default function PhotoRemind({notificationAlarm, setNotificationAlarm}) {
                 <Text style={styles.alarmTitle}>{notificationAlarm.title}</Text>
                 <View style={styles.imageContainer}>
                     <ImageViewer 
-                    placeholderImageSource={placeholderImage} 
-                    selectedImage={notificationAlarm.image}
+                        placeholderImageSource={placeholderImage} 
+                        selectedImage={notificationAlarm.image}
                     />
                 </View>
                 <Text style={styles.alarmTime}>{getLocalTimeStr(notificationAlarm.time)}</Text>
@@ -26,7 +33,6 @@ export default function PhotoRemind({notificationAlarm, setNotificationAlarm}) {
 
 const styles = StyleSheet.create({
     container: {
-        //marginVertical: 'auto',
         marginTop: 26
     },
     alarmTitle: {

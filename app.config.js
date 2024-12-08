@@ -1,9 +1,11 @@
+import 'dotenv/config';
+
 export default {
   expo: {
     name: 'image-reminder-mobile',
     slug: 'photo-reminder',
     scheme: 'com.image-reminder-mobile.image-reminder-mobile',
-    version: '1.0.3',
+    version: '1.0.4',
     orientation: 'portrait',
     notification: {
       icon: './assets/img/favicon.png',
@@ -42,7 +44,7 @@ export default {
       ],
       googleServicesFile: './google-services.json',
       package: 'com.matipendino2001.imagereminder',
-      versionCode: 7,
+      versionCode: 8,
       manifestPlaceholders: {
         googleMobileAdsDelayAppMeasurementInit: true,
       },
@@ -55,8 +57,8 @@ export default {
       [
         'react-native-google-mobile-ads',
         {
-          androidAppId: process.env.admobId,
-          iosAppId: process.env.admobId,
+          androidAppId: process.env.ADMOB_ID,
+          iosAppId: process.env.ADMOB_ID,
         },
       ],
       [
@@ -73,7 +75,7 @@ export default {
         origin: false,
       },
       eas: {
-        projectId: process.env.expoProjectId,
+        projectId: process.env.EXPO_PROJECT_ID,
       },
     },
     owner: 'matipendino2001',

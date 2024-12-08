@@ -1,8 +1,14 @@
 import { StyleSheet, View, Pressable, Text } from "react-native"
 import { WEEKDAYS } from '../constants/Weekdays';
+import { Weekday } from "../types";
 
-export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}) {
-    const handleWeekday = (day) => {
+interface AlarmFrequencyProps {
+    currentWeekdays: Weekday[]
+    setCurrentWeekdays: React.Dispatch<React.SetStateAction<Weekday[]>>
+}
+
+export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}: AlarmFrequencyProps) {
+    const handleWeekday = (day: Weekday): void => {
         for (let i = 0; i < currentWeekdays.length; i++) {
             if (currentWeekdays[i].full === day.full) {
                 setCurrentWeekdays(currentWeekdays.filter((weekday) => (weekday.full !== day.full || weekday.abbreviation !== day.abbreviation)))
@@ -12,7 +18,7 @@ export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}) {
         setCurrentWeekdays([...currentWeekdays, day])
     }
 
-    const isWeekdayActive = (day) => {
+    const isWeekdayActive = (day: Weekday): boolean => {
         for (let i = 0; i < currentWeekdays.length; i++) {
             if (currentWeekdays[i].abbreviation === day.abbreviation && currentWeekdays[i].full === day.full) {
                 return true
@@ -29,12 +35,12 @@ export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}) {
                     onPress={() => handleWeekday(weekday)}
                     style={[
                         styles.weekdayButton, 
-                        isWeekdayActive(weekday) ? styles.weekdayActiveButton : ''
+                        isWeekdayActive(weekday) ? styles.weekdayActiveButton : null
                     ]}
                 >
                     <Text style={[
                         styles.weekdayText,
-                        isWeekdayActive(weekday) ? styles.weekdayActiveText : ''
+                        isWeekdayActive(weekday) ? styles.weekdayActiveText : null
                     ]}>
                         {weekday.abbreviation}
                     </Text>

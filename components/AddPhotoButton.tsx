@@ -1,7 +1,12 @@
 import { StyleSheet, View, Pressable, Text } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-export default function AddPhotoButton({label, onPress}) {
+interface AddPhotoButtonProps {
+    label: string
+    onPress: () => Promise<void>
+}
+
+export default function AddPhotoButton({label, onPress}: AddPhotoButtonProps) {
 
     return (
         <View style={[styles.buttonContainer, { borderWidth: 3, borderColor: "#111", borderRadius: 18 }]}>

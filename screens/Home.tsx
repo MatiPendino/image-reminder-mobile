@@ -5,9 +5,10 @@ import api from '../services/api';
 import IndexNavbar from '../components/IndexNavbar';
 import AlarmCard from '../components/AlarmCard';
 import { getDeviceId } from "../utils/getDeviceId";
+import { AlarmProps } from '../types';
 
-const adUnitIdBanner = __DEV__ ? TestIds.BANNER : 'ca-app-pub-3940256099942544/6300978111';
-const adUnitIdInterst = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3984939241340358/5721068336';
+const adUnitIdBanner: string = __DEV__ ? TestIds.BANNER : 'ca-app-pub-3940256099942544/6300978111';
+const adUnitIdInterst: string = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3984939241340358/5721068336';
 const interstitial = InterstitialAd.createForAdRequest(adUnitIdInterst);
 
 export default function Home ({}) {
@@ -25,12 +26,12 @@ export default function Home ({}) {
     interstitial.show();
   };
 
-  const [alarms, setAlarms] = useState([])
-  const [dataUpdated, setDataUpdated] = useState(false)
+  const [alarms, setAlarms] = useState<AlarmProps[]>([])
+  const [isDataUpdated, setIsDataUpdated] = useState<boolean>(false)
   useEffect(() => {
-    const getAlarms = async () => {
+    const getAlarms = async (): Promise<void> => {
     try {
-      const id = await getDeviceId();
+      const id: string = await getDeviceId();
       const response = await api.get('/alarms/alarm/', {
         headers: {
           'Device-ID': id
@@ -41,12 +42,12 @@ export default function Home ({}) {
     } catch (err) {
       console.log("error:", err)
     } finally {
-      setDataUpdated(false)
+      setIsDataUpdated(false)
     }
     }
 
     getAlarms()
-  }, [dataUpdated])
+  }, [isDataUpdated])
 
   return (
     <View style={styles.container}>
@@ -58,7 +59,7 @@ export default function Home ({}) {
         <AlarmCard 
           key={index}
           alarm={item}
-          setDataUpdated={setDataUpdated}
+          setIsDataUpdated={setIsDataUpdated}
         />
         )}
       />

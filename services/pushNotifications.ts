@@ -1,10 +1,10 @@
 import api from "./api";
-import { Platform } from 'react-native';
+import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { getDeviceId } from "../utils/getDeviceId";
 
-const registerForPushNotificationsAsync = async () => {
-    let token;
+const registerForPushNotificationsAsync = async (): Promise<string | null> => {
+    let token: string | null
   
     // Check platform and request permissions
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
@@ -41,7 +41,7 @@ const registerForPushNotificationsAsync = async () => {
   
         if (finalStatus !== 'granted') {
           Alert.alert('Permission denied', 'Failed to get push token for push notification!');
-          return;
+          return
         }
       }
   
@@ -51,7 +51,6 @@ const registerForPushNotificationsAsync = async () => {
           projectId: process.env.projectId,
         });
         token = response.data;
-        console.log("Push token obtained:", token);
       } catch (error) {
         console.error("Failed to get push token:", error);
       }
@@ -60,17 +59,16 @@ const registerForPushNotificationsAsync = async () => {
       Alert.alert('Unsupported Device', 'Must use physical device for Push Notifications');
     }
   
-    return token;
+    return token
 }
 
 
-const handleNotificationResponse = async (alarmId) => {
+const handleNotificationResponse = async (alarmId, setNotificationAlarm): Promise<void> => {
     try {
       const alarm = await getNotificationAlarm(alarmId);
       setNotificationAlarm(alarm); 
     } catch (err) {
       console.log("error:", err);
-      toast.show(err.message, { type: 'danger' });
     }
   };
 
@@ -111,11 +109,11 @@ export const postToken = async () => {
 }
 
 
-export const checkInitialNotification = async () => {
+export const checkInitialNotification = async (setNotificationAlarm): Promise<void> => {
     const response = await Notifications.getLastNotificationResponseAsync();
     if (response) {
         console.log("Initial notification response:", response);
         const { alarm_id } = response.notification.request.content.data;
-        handleNotificationResponse(alarm_id);
+        handleNotificationResponse(alarm_id, setNotificationAlarm);
     }
 };
