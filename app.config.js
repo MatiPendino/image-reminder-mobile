@@ -5,8 +5,9 @@ export default {
     name: 'image-reminder-mobile',
     slug: 'photo-reminder',
     scheme: 'com.image-reminder-mobile.image-reminder-mobile',
-    version: '1.0.4',
+    version: '2.0.0',
     orientation: 'portrait',
+    jsEngine: 'jsc',
     notification: {
       icon: './assets/img/favicon.png',
       color: '#ffffff',

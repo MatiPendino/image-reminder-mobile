@@ -55,7 +55,7 @@ export default function Alarm({}) {
     };
 
     return (
-        <>
+        <View>
             <AlarmNavbar />
 
             <ScrollView style={styles.container}>
@@ -101,8 +101,7 @@ export default function Alarm({}) {
                     alarm={alarm}
                 />
             </ScrollView>   
-        </>
-         
+        </View>  
     )
 }
 

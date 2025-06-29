@@ -1,31 +1,18 @@
 {
   "cli": {
-    "version": ">= 10.2.4"
+    "version": ">= 14.2.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "http://192.168.20.28:8000",
-        "EXPO_PROJECT_ID": "4025cfaa-d740-4600-af2a-6fe40f79fc67",
-        "ADMOB_ID": "ca-app-pub-3984939241340358~1304321964"
-      }
+      "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "http://192.168.20.28:8000",
-        "EXPO_PROJECT_ID": "4025cfaa-d740-4600-af2a-6fe40f79fc67",
-        "ADMOB_ID": "ca-app-pub-3984939241340358~1304321964"
-      }
+      "distribution": "internal"
     },
     "production": {
-      "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "https://imagereminder.top",
-        "EXPO_PROJECT_ID": "4025cfaa-d740-4600-af2a-6fe40f79fc67",
-        "ADMOB_ID": "ca-app-pub-3984939241340358~1304321964"
-      }
+      "autoIncrement": true
     }
   },
   "submit": {

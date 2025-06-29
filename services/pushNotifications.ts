@@ -109,11 +109,24 @@ export const postToken = async () => {
 }
 
 
-export const checkInitialNotification = async (setNotificationAlarm): Promise<void> => {
-    const response = await Notifications.getLastNotificationResponseAsync();
-    if (response) {
-        console.log("Initial notification response:", response);
-        const { alarm_id } = response.notification.request.content.data;
-        handleNotificationResponse(alarm_id, setNotificationAlarm);
-    }
-};
+export const registerPush = async (fcmToken) => {
+  const id = await getDeviceId();
+  try {
+      const response = await api.post('/notifications/fcm_token/', {
+          headers: {
+            'Device-ID': id,
+          },
+          device_id: id,
+          fcm_token: fcmToken
+      })
+      return response
+  } catch (error) {
+      throw error.response.data
+  }
+}
+
+
+export const getFCMToken = async () => {
+  const token = (await Notifications.getDevicePushTokenAsync()).data;
+  return token
+}
