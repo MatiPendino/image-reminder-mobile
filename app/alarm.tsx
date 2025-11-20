@@ -1,32 +1,40 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, ImageSourcePropType } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'
-import * as MediaLibrary from 'expo-media-library'
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import AlarmFrequency from '../components/AlarmFrequency';
-import AddPhotoButton from '../components/AddPhotoButton';
-import ImageViewer from '../components/ImageViewer';
-import AlarmNavbar from '../components/AlarmNavbar';
-import InlineDateTimePicker from '../components/InlineDatetimePicker';
-import SaveAlarm from '../components/SaveAlarm';
-import { AlarmProps, Weekday } from '../types';
+import { useMemo, useState } from "react";
+import { View, Text, StyleSheet, TextInput, ScrollView, ImageSourcePropType } from "react-native";
+import * as ImagePicker from "expo-image-picker"
+import * as MediaLibrary from "expo-media-library"
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import AlarmFrequency from "../components/AlarmFrequency";
+import AddPhotoButton from "../components/AddPhotoButton";
+import ImageViewer from "../components/ImageViewer";
+import AlarmNavbar from "../components/AlarmNavbar";
+import InlineDateTimePicker from "../components/InlineDatetimePicker";
+import SaveAlarm from "../components/SaveAlarm";
+import { AlarmProps, Weekday } from "../types";
 
-const placeholderImage: ImageSourcePropType = require('../assets/img/background-image.png')
+const placeholderImage: ImageSourcePropType = require("../assets/img/background-image.png")
 
 interface RouteParams {
     alarm: AlarmProps
 }
 
 export default function Alarm({}) {
-    const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
-    let alarm = undefined
-    if (route.params) {
-        alarm = route.params.alarm
-    } 
+    const route = useRoute<RouteProp<{params: RouteParams}, "params">>();
+    const alarm = route.params ? route.params.alarm : undefined
+    const pageTitle = alarm ? "Edit alarm" : "New alarm"
 
-    const [title, setTitle] = useState<string>(alarm ? alarm.title : '')
-    const [date, setDate] = useState<Date>(alarm ? new Date(2024, 10, 10, alarm.time.substring(0, 2), alarm.time.substring(3, 5)) : new Date())
+    const initialDate = useMemo(() => {
+        if (alarm) {
+            const [hours, minutes] = alarm.time.split(":")
+            const existingDate = new Date()
+            existingDate.setHours(Number(hours), Number(minutes), 0, 0)
+            return existingDate
+        }
+        return new Date()
+    }, [alarm])
+
+    const [title, setTitle] = useState<string>(alarm ? alarm.title : "")
+    const [date, setDate] = useState<Date>(initialDate)
     const [currentWeekdays, setCurrentWeekdays] = useState<Weekday[]>(alarm ? alarm.weekdays : [])
     const [selectedImage, setSelectedImage] = useState<string>(alarm ? alarm.image : null)
     const [status, requestPermission] = MediaLibrary.usePermissions()
@@ -44,7 +52,7 @@ export default function Alarm({}) {
         if(!result.canceled) {
             setSelectedImage(result.assets[0].uri)
         } else {
-            alert('You did not select any image.')
+            alert("You did not select any image.")
         }
     }
 
@@ -55,10 +63,10 @@ export default function Alarm({}) {
     };
 
     return (
-        <View>
-            <AlarmNavbar />
+        <ScrollView>
+            <AlarmNavbar title={pageTitle} />
 
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Text style={styles.title}>Set Alarm</Text>
 
                 <InlineDateTimePicker
@@ -100,18 +108,18 @@ export default function Alarm({}) {
                     selectedImage={selectedImage}
                     alarm={alarm}
                 />
-            </ScrollView>   
-        </View>  
+            </View>   
+        </ScrollView>  
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
-        width: '100%',
-        height: '90%',
-        marginHorizontal: 'auto',
-        marginVertical: 'auto',
+        backgroundColor: "#fff",
+        width: "100%",
+        height: "90%",
+        marginHorizontal: "auto",
+        marginVertical: "auto",
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 6
@@ -128,7 +136,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     imageContainer: {
-        textAlign: 'center',
-        alignItems: 'center'
+        textAlign: "center",
+        alignItems: "center"
     }
 })

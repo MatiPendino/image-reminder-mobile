@@ -1,17 +1,24 @@
-import { StyleSheet, View, Pressable, Text } from "react-native"
-import { WEEKDAYS } from '../constants/Weekdays';
+import { StyleSheet, View } from "react-native"
+import { WEEKDAYS } from "../constants/Weekdays";
 import { Weekday } from "../types";
+import AlarmFrequencyButton from "./AlarmFrequencyButton";
 
 interface AlarmFrequencyProps {
     currentWeekdays: Weekday[]
     setCurrentWeekdays: React.Dispatch<React.SetStateAction<Weekday[]>>
 }
 
-export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}: AlarmFrequencyProps) {
+export default function AlarmFrequency({
+    currentWeekdays, setCurrentWeekdays
+}: AlarmFrequencyProps) {
     const handleWeekday = (day: Weekday): void => {
         for (let i = 0; i < currentWeekdays.length; i++) {
             if (currentWeekdays[i].full === day.full) {
-                setCurrentWeekdays(currentWeekdays.filter((weekday) => (weekday.full !== day.full || weekday.abbreviation !== day.abbreviation)))
+                setCurrentWeekdays(
+                    currentWeekdays.filter((weekday) => (
+                        weekday.full !== day.full || weekday.abbreviation !== day.abbreviation
+                    )
+                ));
                 return
             } 
         }
@@ -20,7 +27,10 @@ export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}: Al
 
     const isWeekdayActive = (day: Weekday): boolean => {
         for (let i = 0; i < currentWeekdays.length; i++) {
-            if (currentWeekdays[i].abbreviation === day.abbreviation && currentWeekdays[i].full === day.full) {
+            if (
+                currentWeekdays[i].abbreviation === day.abbreviation && 
+                currentWeekdays[i].full === day.full
+            ) {
                 return true
             }
         }
@@ -30,21 +40,11 @@ export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}: Al
     return (
         <View style={styles.daysContainer}>
             {WEEKDAYS.map((weekday, i) => (
-                <Pressable
-                    key={i}
-                    onPress={() => handleWeekday(weekday)}
-                    style={[
-                        styles.weekdayButton, 
-                        isWeekdayActive(weekday) ? styles.weekdayActiveButton : null
-                    ]}
-                >
-                    <Text style={[
-                        styles.weekdayText,
-                        isWeekdayActive(weekday) ? styles.weekdayActiveText : null
-                    ]}>
-                        {weekday.abbreviation}
-                    </Text>
-                </Pressable>
+                <AlarmFrequencyButton key={i}
+                    weekday={weekday}
+                    handleWeekday={handleWeekday}
+                    isWeekdayActive={isWeekdayActive}
+                />
             ))}
         </View>
     )
@@ -52,25 +52,9 @@ export default function AlarmFrequency({currentWeekdays, setCurrentWeekdays}: Al
 
 const styles = StyleSheet.create({
     daysContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        marginBottom: 20
-    },
-    weekdayButton: {
-        height: 40,
-        width: 40
-    },
-    weekdayActiveButton: {
-        borderRadius: 300,
-        borderColor: '#6600a1',
-        borderWidth: 1
-    },
-    weekdayText: {
-        fontSize: 15,
-        margin: 'auto'
-    },
-    weekdayActiveText: {
-        color: '#6600a1',
-        fontWeight: '700'
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        marginBottom: 20,
+        paddingHorizontal: 6,
     },
 })

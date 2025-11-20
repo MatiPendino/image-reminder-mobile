@@ -1,62 +1,61 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 export default {
   expo: {
-    name: 'image-reminder-mobile',
-    slug: 'photo-reminder',
-    scheme: 'com.image-reminder-mobile.image-reminder-mobile',
-    version: '2.0.0',
-    orientation: 'portrait',
-    jsEngine: 'jsc',
+    name: "Image Reminder",
+    slug: "photo-reminder",
+    scheme: "com.image-reminder-mobile.image-reminder-mobile",
+    version: "2.0.0",
+    orientation: "portrait",
+    jsEngine: "jsc",
     notification: {
-      icon: './assets/img/favicon.png',
-      color: '#ffffff',
+      icon: "./assets/img/favicon.png",
+      color: "#ffffff",
       iosDisplayInForeground: true,
-      androidMode: 'default',
-      androidCollapsedTitle: '#{unread_notifications} new notifications',
+      androidMode: "default",
+      androidCollapsedTitle: "#{unread_notifications} new notifications",
     },
-    icon: './assets/img/favicon.png',
-    userInterfaceStyle: 'light',
+    icon: "./assets/img/favicon.png",
+    userInterfaceStyle: "light",
     splash: {
-      image: './assets/img/adaptive-icon.png',
-      resizeMode: 'contain',
-      backgroundColor: '#cfedf7',
+      image: "./assets/img/adaptive-icon.png",
+      resizeMode: "contain",
+      backgroundColor: "#cfedf7",
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.image-reminder-mobile.image-reminder-mobile',
+      bundleIdentifier: "com.image-reminder-mobile.image-reminder-mobile",
       infoPlist: {
-        NSPhotoLibraryUsageDescription: 'This app requires access to your photo library to select and save photos.',
-        NSCameraUsageDescription: 'This app requires access to your camera to take photos.',
+        NSPhotoLibraryUsageDescription: "This app requires access to your photo library to select and save photos.",
+        NSCameraUsageDescription: "This app requires access to your camera to take photos.",
       },
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: './assets/img/adaptive-icon.png',
-        backgroundColor: '#cfedf7',
+        foregroundImage: "./assets/img/adaptive-icon.png",
+        backgroundColor: "#cfedf7",
       },
       permissions: [
-        'READ_EXTERNAL_STORAGE',
-        'WRITE_EXTERNAL_STORAGE',
-        'CAMERA',
-        'POST_NOTIFICATIONS',
-        'INTERNET', 
-        'ACCESS_NETWORK_STATE',
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA",
+        "POST_NOTIFICATIONS",
+        "INTERNET", 
+        "ACCESS_NETWORK_STATE",
       ],
-      googleServicesFile: './google-services.json',
-      package: 'com.matipendino2001.imagereminder',
-      versionCode: 8,
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
+      package: "com.matipendino2001.imagereminder",
       manifestPlaceholders: {
         googleMobileAdsDelayAppMeasurementInit: true,
       },
     },
     web: {
-      favicon: './assets/img/favicon.png',
+      favicon: "./assets/img/favicon.png",
     },
     plugins: [
-      'expo-router',
+      "expo-router",
       [
-        'react-native-google-mobile-ads',
+        "react-native-google-mobile-ads",
         {
           androidAppId: process.env.ADMOB_ID,
           iosAppId: process.env.ADMOB_ID,
@@ -67,7 +66,19 @@ export default {
         {
           "ios": {
             "useFrameworks": "static"
+          },
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35
           }
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "imagereminder",
+          "organization": "mappek"
         }
       ]
     ],
@@ -79,6 +90,6 @@ export default {
         projectId: process.env.EXPO_PROJECT_ID,
       },
     },
-    owner: 'matipendino2001',
+    owner: "matipendino2001",
   },
 };

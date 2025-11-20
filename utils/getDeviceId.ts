@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import uuid from 'react-native-uuid';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from "react-native-uuid";
 
-const DEVICE_ID_KEY = 'DEVICE_ID';
+const DEVICE_ID_KEY = "DEVICE_ID";
 
 export const getDeviceId = async (): Promise<string> => {
   try {
@@ -15,7 +15,6 @@ export const getDeviceId = async (): Promise<string> => {
     }
     return deviceId;
   } catch (error) {
-    console.error("Error getting or generating device ID:", error);
     return null;
   }
 };
