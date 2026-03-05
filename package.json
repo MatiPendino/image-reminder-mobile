@@ -21,7 +21,7 @@
     "babel-plugin-inline-dotenv": "1.7.0",
     "babel-plugin-transform-inline-environment-variables": "0.4.4",
     "dotenv": "16.4.7",
-    "expo": "52.0.23",
+    "expo": "55.0.4",
     "expo-build-properties": "0.13.2",
     "expo-constants": "17.0.4",
     "expo-dev-client": "5.0.7",
