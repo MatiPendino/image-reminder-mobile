@@ -7,7 +7,7 @@ export default {
     scheme: "com.image-reminder-mobile.image-reminder-mobile",
     version: "2.0.0",
     orientation: "portrait",
-    jsEngine: "jsc",
+    jsEngine: "hermes",
     notification: {
       icon: "./assets/img/favicon.png",
       color: "#ffffff",
@@ -69,7 +69,8 @@ export default {
           },
           "android": {
             "compileSdkVersion": 35,
-            "targetSdkVersion": 35
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
           }
         }
       ],
